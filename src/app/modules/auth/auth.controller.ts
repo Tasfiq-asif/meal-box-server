@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { AuthService } from "./auth.service";
 import { UserService } from "../user/user.service";
 import catchAsync from "../../../utils/catchAsync";
+import sendResponse from "../../../utils/sendResponse";
 
 // Login user
 const login = catchAsync(async (req: Request, res: Response) => {
@@ -9,15 +10,22 @@ const login = catchAsync(async (req: Request, res: Response) => {
 
   const user = await AuthService.login(email, password);
   if (!user) {
-    res.status(401).json({
-      status: "fail",
-      message: "Invalid credentials",
+    return sendResponse(res, {
+      statusCode: 401,
+      success: false,
+      message: "Invalid email or password",
     });
-    return;
   }
 
-  // Send user response
-  UserService.sendUserResponse(user, 200, res);
+  // Remove sensitive information before sending
+  const userData = (user as any).toJSON ? (user as any).toJSON() : { ...user };
+  if (userData.password) delete userData.password;
+
+  sendResponse(res, {
+    statusCode: 200,
+    message: "User logged in successfully",
+    data: userData,
+  });
 });
 
 // Register a new user
@@ -26,21 +34,21 @@ const register = catchAsync(async (req: Request, res: Response) => {
 
   // Check if password and confirmPassword match
   if (password !== req.body.confirmPassword) {
-    res.status(400).json({
-      status: "fail",
+    return sendResponse(res, {
+      statusCode: 400,
+      success: false,
       message: "Passwords do not match",
     });
-    return;
   }
 
   // Check if user already exists
   const existingUser = await UserService.findUserByEmail(email);
   if (existingUser) {
-    res.status(400).json({
-      status: "fail",
-      message: "Email already in use",
+    return sendResponse(res, {
+      statusCode: 400,
+      success: false,
+      message: "Email is already in use",
     });
-    return;
   }
 
   // Create new user
@@ -53,35 +61,51 @@ const register = catchAsync(async (req: Request, res: Response) => {
     address,
   });
 
-  // Send user response
-  UserService.sendUserResponse(user, 201, res);
+  // Remove sensitive information before sending
+  const userData = (user as any).toJSON ? (user as any).toJSON() : { ...user };
+  if (userData.password) delete userData.password;
+
+  sendResponse(res, {
+    statusCode: 201,
+    message: "User registered successfully",
+    data: userData,
+  });
 });
 
 // Get current authenticated user
 const getMe = catchAsync(async (req: Request, res: Response) => {
   if (!req.user) {
-    return res.status(401).json({
-      status: "fail",
-      message: "Not authorized",
+    return sendResponse(res, {
+      statusCode: 401,
+      success: false,
+      message: "You are not authenticated",
     });
   }
 
   const userId = req.user.id || (req.user._id && req.user._id.toString());
 
   if (!userId) {
-    return res.status(401).json({
-      status: "fail",
+    return sendResponse(res, {
+      statusCode: 401,
+      success: false,
       message: "User ID not found",
     });
   }
 
   const user = await UserService.findUserById(userId);
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      user,
-    },
+  if (!user) {
+    return sendResponse(res, {
+      statusCode: 404,
+      success: false,
+      message: "User not found",
+    });
+  }
+
+  sendResponse(res, {
+    statusCode: 200,
+    message: "User profile retrieved successfully",
+    data: user,
   });
 });
 
@@ -90,8 +114,8 @@ const logout = catchAsync(async (req: Request, res: Response) => {
   // Clear token cookie
   res.clearCookie("token");
 
-  res.status(200).json({
-    status: "success",
+  sendResponse(res, {
+    statusCode: 200,
     message: "Logged out successfully",
   });
 });
