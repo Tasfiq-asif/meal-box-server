@@ -18,7 +18,7 @@ export const validate = (schema: ZodSchema) => {
       if (error instanceof ZodError) {
         // Format ZodError for consistent error response
         const errorMessages = error.errors.map((err) => {
-          // Remove the 'body.' prefix from the path if it exists
+          // Join the path elements with a dot and remove the 'body.' prefix if it exists
           const field = err.path.join(".").replace(/^body\./, "");
           return {
             field,
