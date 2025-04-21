@@ -3,6 +3,7 @@ import cors from "cors";
 import { errorHandler } from "./middleware/errorHandler";
 import { userRouter } from "./app/modules/user/user.route";
 import { authRouter } from "./app/modules/auth/auth.route";
+import { CustomerProfileRouter } from "./app/modules/customerProfile/customerProfile.router";
 
 const app: Application = express();
 
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/profile", CustomerProfileRouter);
 
 // Global error handler
 app.use(errorHandler);
