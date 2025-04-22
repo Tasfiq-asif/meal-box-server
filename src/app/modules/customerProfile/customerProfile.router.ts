@@ -3,8 +3,8 @@ import { ProfileController } from "./customerProfile.controller";
 
 const router = express.Router();
 
-// Create customer profile
-router.post("/customer", ProfileController.profile);
+// Update customer profile by user ID
+router.put("/customer/:userId", ProfileController.updateProfile);
 
 // Get customer profile by customer ID
 router.get("/customer/:customerId", ProfileController.getcustomerprofile);

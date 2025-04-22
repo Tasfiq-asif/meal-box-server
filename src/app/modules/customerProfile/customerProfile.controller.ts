@@ -3,13 +3,34 @@ import catchAsync from "../../../utils/catchAsync";
 import sendResponse from "../../../utils/sendResponse";
 import { customerProfileService } from "./customerProfile.service";
 
-const profile = catchAsync(async (req: Request, res: Response) => {
-  const profileData = req.body;
-  const profile = await customerProfileService.profile(profileData);
+const updateProfile = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.userId;
+  const updateData = req.body;
+
+  // First check if profile exists
+  const existingProfile = await customerProfileService.getProfileByUserId(
+    userId
+  );
+
+  if (!existingProfile) {
+    return sendResponse(res, {
+      statusCode: 404,
+      success: false,
+      message: "Customer profile not found",
+    });
+  }
+
+  // Update the profile
+  const updatedProfile = await customerProfileService.updateProfile(
+    userId,
+    updateData
+  );
+
   sendResponse(res, {
-    statusCode: 201,
-    message: "customer profile successfully",
-    data: profile,
+    statusCode: 200,
+    success: true,
+    message: "Customer profile updated successfully",
+    data: updatedProfile,
   });
 });
 
@@ -55,7 +76,7 @@ const getAllCustomerProfiles = catchAsync(
 );
 
 export const ProfileController = {
-  profile,
+  updateProfile,
   getcustomerprofile,
   getProfileByUserId,
   getAllCustomerProfiles,

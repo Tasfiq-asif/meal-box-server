@@ -1,12 +1,25 @@
 import { TCustomerProfile } from "./customerProfile.interface";
 import CustomerProfile from "./customerProfile.model";
 
-const profile = async (
-  payload: TCustomerProfile
-): Promise<TCustomerProfile> => {
-  const result = await CustomerProfile.create(payload);
+const updateProfile = async (
+  userId: string,
+  updateData: Partial<TCustomerProfile>
+): Promise<TCustomerProfile | null> => {
+  // Ensure we're not trying to update userId which should be immutable
+  if (updateData.userId) {
+    delete updateData.userId;
+  }
 
-  return result;
+  const result = await CustomerProfile.findOneAndUpdate(
+    { userId },
+    updateData,
+    { new: true, runValidators: true }
+  ).populate({
+    path: "userId",
+    select: "name email phone address role",
+  });
+
+  return result ? (result.toObject() as TCustomerProfile) : null;
 };
 
 const getprofile = async (
@@ -43,7 +56,7 @@ const getAllProfiles = async (): Promise<TCustomerProfile[]> => {
 };
 
 export const customerProfileService = {
-  profile,
+  updateProfile,
   getprofile,
   getProfileByUserId,
   getAllProfiles,
