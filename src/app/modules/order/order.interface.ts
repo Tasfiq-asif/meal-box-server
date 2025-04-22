@@ -1,14 +1,13 @@
-export interface IOrder { 
-  customerId: string; 
+export interface IOrder {
+  customerId: string;
   mealId: string;
   deliveryAddress: string;
-  phone: number; 
+  phone: number;
   mealItemIds: string[];
-  status: 'pending' | 'in progress' | 'delivered' | 'cancelled'; 
+  status: "pending" | "in progress" | "delivered" | "cancelled";
   scheduledDate: string;
   specialInstructions: string[];
   pricing: number;
-  providerId: string; 
+  providerId: string;
   dietaryPreferences: string[];
-  
 }

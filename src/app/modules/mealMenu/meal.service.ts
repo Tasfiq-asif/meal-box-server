@@ -16,9 +16,9 @@ const deleteMeal = async (mealId: string): Promise<IMealMenu | null> => {
   return await MealMenu.findByIdAndDelete(mealId);
 };
 
-const getProviderMeals = async (providerId: string): Promise<IMealMenu[]> => {
+const getProviderMeals = async (userId: string): Promise<IMealMenu[]> => {
   return await MealMenu.find({
-    providerId: new mongoose.Types.ObjectId(providerId),
+    userId: new mongoose.Types.ObjectId(userId),
   });
 };
 
@@ -31,5 +31,5 @@ export const MealMenuService = {
   updateMeal,
   deleteMeal,
   getProviderMeals,
-  getMealById, // Ensure this is included
+  getMealById,
 };

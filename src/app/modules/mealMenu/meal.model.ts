@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IMealMenu extends Document {
-  providerId: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
   mealName: string;
   description: string;
   ingredients: string[];
@@ -12,7 +12,7 @@ export interface IMealMenu extends Document {
 }
 
 const mealMenuSchema = new Schema<IMealMenu>({
-  providerId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   mealName: { type: String, required: true },
   description: { type: String, required: true },
   ingredients: { type: [String], required: true },

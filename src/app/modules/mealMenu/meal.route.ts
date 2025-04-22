@@ -5,11 +5,11 @@ import { MealMenuController } from "./meal.controller";
 
 const router = express.Router();
 
-router.post("/", MealMenuController.createMeal);
+router.post("/", auth("provider"), MealMenuController.createMeal);
 router.put("/:mealId", auth("provider"), MealMenuController.updateMeal);
 router.delete("/:mealId", auth("provider"), MealMenuController.deleteMeal);
 router.get(
-  "/provider/:providerId",
+  "/user/:userId",
   auth("provider"),
   MealMenuController.getProviderMeals
 );

@@ -1,14 +1,13 @@
- import mongoose from 'mongoose';
-import { IOrder } from './order.interface';
-import { Order } from './order.model';
-
+import mongoose from "mongoose";
+import { IOrder } from "./order.interface";
+import { Order } from "./order.model";
 
 export class OrderService {
   // Create a new order
   static async createOrder(payload: IOrder): Promise<IOrder> {
     const order = new Order({
       ...payload,
-      Status: payload.status || 'pending',
+      Status: payload.status || "pending",
     });
     return await order.save();
   }

@@ -5,9 +5,14 @@ interface AuthenticatedRequest extends Request {
   user?: { id: string }; // Adjust based on your user object structure
 }
 
-const createMeal = async (req: Request, res: Response) => {
+const createMeal = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const meal = await MealMenuService.createMeal(req.body);
+    // Add the userId from the authenticated user
+    const mealData = {
+      ...req.body,
+      userId: req.user?.id,
+    };
+    const meal = await MealMenuService.createMeal(mealData);
     res.status(201).json({ success: true, data: meal });
   } catch (error) {
     const errorMessage =
@@ -25,7 +30,7 @@ const updateMeal = async (req: AuthenticatedRequest, res: Response) => {
         .json({ success: false, message: "Meal not found" });
     }
 
-    if (!req.user || meal.providerId.toString() !== req.user.id) {
+    if (!req.user || meal.userId.toString() !== req.user.id) {
       return res.status(403).json({ success: false, message: "Unauthorized" });
     }
 
@@ -50,7 +55,7 @@ const deleteMeal = async (req: AuthenticatedRequest, res: Response) => {
         .json({ success: false, message: "Meal not found" });
     }
 
-    if (!req.user || meal.providerId.toString() !== req.user.id) {
+    if (!req.user || meal.userId.toString() !== req.user.id) {
       return res.status(403).json({ success: false, message: "Unauthorized" });
     }
 
@@ -65,7 +70,7 @@ const deleteMeal = async (req: AuthenticatedRequest, res: Response) => {
 
 const getProviderMeals = async (req: Request, res: Response) => {
   try {
-    const meals = await MealMenuService.getProviderMeals(req.params.providerId);
+    const meals = await MealMenuService.getProviderMeals(req.params.userId);
     res.status(200).json({ success: true, data: meals });
   } catch (error) {
     const errorMessage =
