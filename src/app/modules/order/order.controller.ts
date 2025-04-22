@@ -7,9 +7,9 @@ export class OrderController {
   
   static async createOrder(req: Request, res: Response) {
       try {
-      const payload = OrderSchema.parse(req.body);
+      // const payload = OrderSchema.parse(req.body);
       
-      const order = await OrderService.createOrder(payload);
+      const order = await OrderService.createOrder(req.body);
           return res.status(201).json({
               message: ' Order created successfully',
               success: true,

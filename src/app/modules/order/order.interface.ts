@@ -1,6 +1,9 @@
+import mongoose from "mongoose";
+
 export interface IOrder { 
-  customerId: string; 
-  mealId: string;
+  customerId: mongoose.Types.ObjectId;
+  mealId: mongoose.Types.ObjectId;
+  providerId: mongoose.Types.ObjectId;
   deliveryAddress: string;
   phone: number; 
   mealItemIds: string[];
@@ -8,7 +11,6 @@ export interface IOrder {
   scheduledDate: string;
   specialInstructions: string[];
   pricing: number;
-  providerId: string; 
   dietaryPreferences: string[];
   
 }
