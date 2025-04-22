@@ -16,7 +16,7 @@ const getprofile = async (
     customerId: customerId,
   }).populate({
     path: "userId",
-    select: "name email phone address", // Only return these fields from User model
+    select: "name email phone address role", // Include all relevant user fields
   });
 
   return result ? (result.toObject() as TCustomerProfile) : null;
@@ -27,14 +27,24 @@ const getProfileByUserId = async (
 ): Promise<TCustomerProfile | null> => {
   const result = await CustomerProfile.findOne({ userId }).populate({
     path: "userId",
-    select: "name email phone address",
+    select: "name email phone address role",
   });
 
   return result ? (result.toObject() as TCustomerProfile) : null;
+};
+
+const getAllProfiles = async (): Promise<TCustomerProfile[]> => {
+  const results = await CustomerProfile.find().populate({
+    path: "userId",
+    select: "name email phone address role",
+  });
+
+  return results.map((result) => result.toObject() as TCustomerProfile);
 };
 
 export const customerProfileService = {
   profile,
   getprofile,
   getProfileByUserId,
+  getAllProfiles,
 };

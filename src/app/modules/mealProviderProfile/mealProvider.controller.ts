@@ -50,8 +50,24 @@ const getProviderByUserId = async (req: Request, res: Response) => {
   }
 };
 
+const getAllProviders = async (req: Request, res: Response) => {
+  try {
+    const providers = await MealProviderService.getAllProviders();
+    res.status(200).json({
+      success: true,
+      count: providers.length,
+      data: providers,
+    });
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "An unexpected error occurred";
+    res.status(500).json({ success: false, message: errorMessage });
+  }
+};
+
 export const MealProviderController = {
   updateProfile,
   getProviderProfile,
   getProviderByUserId,
+  getAllProviders,
 };

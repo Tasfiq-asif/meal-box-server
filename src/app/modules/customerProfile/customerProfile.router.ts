@@ -12,4 +12,7 @@ router.get("/customer/:customerId", ProfileController.getcustomerprofile);
 // Get customer profile by user ID
 router.get("/user/:userId", ProfileController.getProfileByUserId);
 
+// Get all customer profiles
+router.get("/customers", ProfileController.getAllCustomerProfiles);
+
 export const CustomerProfileRouter = router;

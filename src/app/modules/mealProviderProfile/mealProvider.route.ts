@@ -13,4 +13,7 @@ router.get("/provider/:id", MealProviderController.getProviderProfile);
 // Get provider profile by user ID
 router.get("/user/:userId", MealProviderController.getProviderByUserId);
 
+// Get all provider profiles
+router.get("/providers", MealProviderController.getAllProviders);
+
 export const mealProviderRouter = router;

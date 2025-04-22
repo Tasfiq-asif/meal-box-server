@@ -42,8 +42,21 @@ const getProfileByUserId = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllCustomerProfiles = catchAsync(
+  async (req: Request, res: Response) => {
+    const profiles = await customerProfileService.getAllProfiles();
+
+    sendResponse(res, {
+      statusCode: 200,
+      message: "All customer profiles retrieved successfully",
+      data: profiles,
+    });
+  }
+);
+
 export const ProfileController = {
   profile,
   getcustomerprofile,
   getProfileByUserId,
+  getAllCustomerProfiles,
 };
