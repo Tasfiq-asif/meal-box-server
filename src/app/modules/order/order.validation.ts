@@ -1,8 +1,11 @@
 import { z } from "zod";
 
+// Zod regex for a valid MongoDB ObjectId (24 hex characters)
+const objectIdRegex = /^[a-f\d]{24}$/i;
+
 export const OrderSchema = z.object({
-  customerId: z.string(),
-  mealId: z.string(),
+  customerId: z.string().regex(objectIdRegex, "Invalid Customer ObjectId"),
+  mealId: z.string().regex(objectIdRegex, "Invalid mealId ObjectId"),
   deliveryAddress: z.string(),
   phone: z.number(),
   mealItemIds: z.array(z.string()),
@@ -10,7 +13,7 @@ export const OrderSchema = z.object({
   scheduledDate: z.string(),
   specialInstructions: z.array(z.string()),
   pricing: z.number(),
-  providerId: z.string(),
+  providerId: z.string().regex(objectIdRegex, "Invalid Provider ObjectId"),
   dietaryPreferences: z.array(z.string()),
 });
 
