@@ -1,10 +1,10 @@
-import { model , Schema } from "mongoose";
+import { model , Schema, Types } from "mongoose";
 import { TCustomerProfile } from "./customerProfile.interface";
 
   
 const customerProfileSchema = new Schema<TCustomerProfile>({
     userId: {
-      type: String,
+      type: Types.ObjectId,
       required: true,
       unique: true,   
     },
