@@ -1,18 +1,17 @@
 import { z } from "zod";
 
 export const OrderSchema = z.object({
-  CustomerId: z.string(),
-  MenuId: z.string(),
-  DeliveryAddress: z.string(),
-  Phone: z.number(),
-  MealItemIds: z.array(z.string()),
-  Status: z.enum(["pending", "in progress", "delivered", "cancelled"]),
-  Schedule: z.string(),
-  CustomizationOptions: z.array(z.string()),
-  Pricing: z.number(),
-    ProviderId: z.string(),
+  customerId: z.string(),
+  mealId: z.string(),
+  deliveryAddress: z.string(),
+  phone: z.number(),
+  mealItemIds: z.array(z.string()),
+  status: z.enum(["pending", "in progress", "delivered", "cancelled"]),
+  scheduledDate: z.string(),
+  specialInstructions: z.array(z.string()),
+  pricing: z.number(),
+  providerId: z.string(),
   dietaryPreferences: z.array(z.string()),
-  notes: z.string().optional(),
 });
 
 // Optional: infer the TypeScript type from Zod
