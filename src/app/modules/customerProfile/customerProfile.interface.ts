@@ -1,11 +1,8 @@
 import { Types } from "mongoose";
-
+import { TUser } from "../user/user.interface";
 
 export interface TCustomerProfile {
-    userId?: Types.ObjectId;              
-    deliveryAddress: string;
-    phone: number;
-    pastOrders: string[];          
-    role: 'customer' | 'provider'; 
-    email: string;
-  }
+  userId: Types.ObjectId | TUser;
+  deliveryAddress: string;
+  pastOrders: string[];
+}

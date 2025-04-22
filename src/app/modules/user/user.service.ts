@@ -4,10 +4,86 @@ import { Response } from "express";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 import config from "../../../app/config";
+import CustomerProfile from "../customerProfile/customerProfile.model";
+import { MealProvider } from "../mealProviderProfile/mealProvider.model";
 
 const register = async (userData: TUserRegistration): Promise<TUser> => {
-  const user = await User.create(userData);
-  return user;
+  // Start a session for transaction
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    console.log("Starting user registration with role:", userData.role);
+
+    // Create user first
+    const user = await User.create([userData], { session });
+    const newUser = user[0];
+    console.log("User created successfully with ID:", newUser._id);
+
+    // Create appropriate profile based on user role
+    if (userData.role === "customer") {
+      console.log("Creating customer profile for user:", newUser._id);
+      try {
+        // Create customer profile
+        const customerProfile = await CustomerProfile.create(
+          [
+            {
+              userId: newUser._id,
+              deliveryAddress: userData.address || "Default Address",
+              pastOrders: [],
+            },
+          ],
+          { session }
+        );
+        console.log(
+          "Customer profile created successfully:",
+          customerProfile[0]._id
+        );
+      } catch (profileError) {
+        console.error("Error creating customer profile:", profileError);
+        throw profileError;
+      }
+    } else if (userData.role === "provider") {
+      console.log("Creating provider profile for user:", newUser._id);
+      try {
+        // Create provider profile
+        const providerProfile = await MealProvider.create(
+          [
+            {
+              userId: newUser._id,
+              cuisineSpecialties: ["General"],
+              pricing: 0, // Default pricing
+              experience: "Beginner",
+              availability: true,
+            },
+          ],
+          { session }
+        );
+        console.log(
+          "Provider profile created successfully:",
+          providerProfile[0]._id
+        );
+      } catch (profileError) {
+        console.error("Error creating provider profile:", profileError);
+        throw profileError;
+      }
+    } else {
+      console.warn("Unknown role specified:", userData.role);
+    }
+
+    // Commit the transaction
+    await session.commitTransaction();
+    session.endSession();
+    console.log("Transaction committed successfully");
+
+    return newUser;
+  } catch (error) {
+    // Abort transaction on error
+    await session.abortTransaction();
+    session.endSession();
+    console.error("Transaction failed during registration:", error);
+    throw error;
+  }
 };
 
 const findUserByEmail = async (email: string): Promise<TUser | null> => {

@@ -1,37 +1,29 @@
-import { model , Schema, Types } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 import { TCustomerProfile } from "./customerProfile.interface";
 
-  
-const customerProfileSchema = new Schema<TCustomerProfile>({
+const customerProfileSchema = new Schema<TCustomerProfile>(
+  {
     userId: {
       type: Types.ObjectId,
+      ref: "User",
       required: true,
-      unique: true,   
+      unique: true,
     },
     deliveryAddress: {
       type: String,
       required: true,
     },
-    phone: {
-      type: Number,
-      required: true,
-    },
     pastOrders: {
-      type: [String],  // Array of Order IDs
+      type: [String], // Array of Order IDs
       default: [],
     },
-    role: {
-      type: String,
-      enum: ['customer', 'provider'],
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-  });
-  
-  const CustomerProfile = model<TCustomerProfile>('CustomerProfile', customerProfileSchema);
+  },
+  { timestamps: true }
+);
 
-  export default CustomerProfile;
+const CustomerProfile = model<TCustomerProfile>(
+  "CustomerProfile",
+  customerProfileSchema
+);
+
+export default CustomerProfile;

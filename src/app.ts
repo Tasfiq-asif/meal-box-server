@@ -5,6 +5,7 @@ import { userRouter } from "./app/modules/user/user.route";
 import { authRouter } from "./app/modules/auth/auth.route";
 import { CustomerProfileRouter } from "./app/modules/customerProfile/customerProfile.router";
 import { orderRouter } from "./app/modules/order/order.router";
+import { mealProviderRouter } from "./app/modules/mealProviderProfile/mealProvider.route";
 
 const app: Application = express();
 
@@ -17,8 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/profile", CustomerProfileRouter);
+app.use("/api/v1/providers", mealProviderRouter);
 app.use("/api/v1", orderRouter);
-
 
 // Global error handler
 app.use(errorHandler);

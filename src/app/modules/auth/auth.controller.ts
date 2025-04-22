@@ -31,9 +31,11 @@ const login = catchAsync(async (req: Request, res: Response) => {
 // Register a new user
 const register = catchAsync(async (req: Request, res: Response) => {
   const { name, email, password, role, phone, address } = req.body;
+  console.log("Registration request received:", { name, email, role });
 
   // Check if password and confirmPassword match
   if (password !== req.body.confirmPassword) {
+    console.log("Password mismatch during registration");
     return sendResponse(res, {
       statusCode: 400,
       success: false,
@@ -44,6 +46,7 @@ const register = catchAsync(async (req: Request, res: Response) => {
   // Check if user already exists
   const existingUser = await UserService.findUserByEmail(email);
   if (existingUser) {
+    console.log("Registration failed: Email already in use:", email);
     return sendResponse(res, {
       statusCode: 400,
       success: false,
@@ -51,25 +54,42 @@ const register = catchAsync(async (req: Request, res: Response) => {
     });
   }
 
-  // Create new user
-  const user = await UserService.register({
-    name,
-    email,
-    password,
-    role,
-    phone,
-    address,
-  });
+  try {
+    // Create new user
+    const user = await UserService.register({
+      name,
+      email,
+      password,
+      role,
+      phone,
+      address,
+    });
 
-  // Remove sensitive information before sending
-  const userData = (user as any).toJSON ? (user as any).toJSON() : { ...user };
-  if (userData.password) delete userData.password;
+    // Remove sensitive information before sending
+    const userData = (user as any).toJSON
+      ? (user as any).toJSON()
+      : { ...user };
+    if (userData.password) delete userData.password;
 
-  sendResponse(res, {
-    statusCode: 201,
-    message: "User registered successfully",
-    data: userData,
-  });
+    console.log(
+      `User registered successfully with role: ${role}, ID: ${userData._id}`
+    );
+
+    sendResponse(res, {
+      statusCode: 201,
+      success: true,
+      message: "User registered successfully",
+      data: userData,
+    });
+  } catch (error) {
+    console.error("Registration error:", error);
+
+    sendResponse(res, {
+      statusCode: 500,
+      success: false,
+      message: error instanceof Error ? error.message : "Registration failed",
+    });
+  }
 });
 
 // Get current authenticated user
