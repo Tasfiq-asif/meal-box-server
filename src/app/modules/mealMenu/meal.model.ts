@@ -5,8 +5,10 @@ export interface IMealMenu extends Document {
   mealName: string;
   description: string;
   ingredients: string[];
-  price: number;
-  portionSize: string;
+  portions: {
+    size: "small" | "medium" | "large";
+    price: number;
+  }[];
   dietTags: string[];
   availability: boolean;
 }
@@ -16,8 +18,28 @@ const mealMenuSchema = new Schema<IMealMenu>({
   mealName: { type: String, required: true },
   description: { type: String, required: true },
   ingredients: { type: [String], required: true },
-  price: { type: Number, required: true },
-  portionSize: { type: String, required: true },
+  portions: {
+    type: [
+      {
+        size: {
+          type: String,
+          enum: ["small", "medium", "large"],
+          required: true,
+        },
+        price: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
+    required: true,
+    validate: {
+      validator: function (portions: any[]) {
+        return portions.length > 0;
+      },
+      message: "At least one portion size must be provided",
+    },
+  },
   dietTags: { type: [String], required: true },
   availability: { type: Boolean, default: true },
 });

@@ -1,6 +1,7 @@
 // src/app/modules/mealMenu/service/mealMenu.service.ts
 import { MealMenu, IMealMenu } from "../mealMenu/meal.model";
 import mongoose from "mongoose";
+
 const createMeal = async (mealData: Partial<IMealMenu>): Promise<IMealMenu> => {
   return await MealMenu.create(mealData);
 };
