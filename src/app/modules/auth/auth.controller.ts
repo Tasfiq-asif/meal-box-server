@@ -8,8 +8,8 @@ import sendResponse from "../../../utils/sendResponse";
 const login = catchAsync(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
-  const user = await AuthService.login(email, password);
-  if (!user) {
+  const result = await AuthService.login(email, password);
+  if (!result) {
     return sendResponse(res, {
       statusCode: 401,
       success: false,
@@ -17,14 +17,18 @@ const login = catchAsync(async (req: Request, res: Response) => {
     });
   }
 
+  const { user, accessToken } = result;
+
   // Remove sensitive information before sending
   const userData = (user as any).toJSON ? (user as any).toJSON() : { ...user };
   if (userData.password) delete userData.password;
 
   sendResponse(res, {
     statusCode: 200,
+    success: true,
     message: "User logged in successfully",
     data: userData,
+    accessToken, // Include the token in the response
   });
 });
 
