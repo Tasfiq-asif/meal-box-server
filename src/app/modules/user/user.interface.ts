@@ -14,6 +14,7 @@ export interface TUser {
   role: UserRole;
   createdAt: Date;
   updatedAt: Date;
+  
   comparePassword?(candidatePassword: string): Promise<boolean>;
 }
 
