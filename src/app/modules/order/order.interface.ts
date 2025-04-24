@@ -8,9 +8,11 @@ export interface IOrder {
   phone: number; 
   mealItemIds: string[];
   status: 'pending' | 'in progress' | 'delivered' | 'cancelled'; 
-  scheduledDate: string;
-  specialInstructions: string[];
+  scheduledDate: {
+    startDate: string;
+    endDate: string;
+  };
+  extraItems: string[];
   pricing: number;
   dietaryPreferences: string[];
-  
 }

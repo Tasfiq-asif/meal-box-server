@@ -15,8 +15,11 @@ const OrderSchema: Schema = new Schema<IOrder>(
       enum: ["pending", "in progress", "delivered", "cancelled"],
       default: "pending",
     },
-    scheduledDate: { type: String, required: true },
-    specialInstructions: [{ type: String }],
+    scheduledDate: {
+      startDate: { type: String, required: true },
+      endDate: { type: String, required: true },
+    },
+    extraItems: [{ type: String }],
     pricing: { type: Number, required: true },
     // providerId: { type: String, required: true },
     providerId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
