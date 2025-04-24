@@ -4,15 +4,15 @@ import { OrderSchema } from "./order.validation";
 
 export class OrderController {
   static async createOrder(req: Request, res: Response) {
-    try {
-      const payload = OrderSchema.parse(req.body);
-
-      const order = await OrderService.createOrder(payload);
-      return res.status(201).json({
-        message: " Order created successfully",
-        success: true,
-        data: order,
-      });
+      try {
+      // const payload = OrderSchema.parse(req.body);
+      
+      const order = await OrderService.createOrder(req.body);
+          return res.status(201).json({
+              message: ' Order created successfully',
+              success: true,
+              data: order
+          });
     } catch (error: any) {
       return res.status(400).json({
         message: "something went wrong",
