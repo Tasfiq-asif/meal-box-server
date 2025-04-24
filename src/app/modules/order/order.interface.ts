@@ -6,7 +6,6 @@ export interface IOrder {
   providerId: mongoose.Types.ObjectId;
   deliveryAddress: string;
   phone: number; 
-  mealItemIds: string[];
   status: 'pending' | 'in progress' | 'delivered' | 'cancelled'; 
   scheduledDate: {
     startDate: string;

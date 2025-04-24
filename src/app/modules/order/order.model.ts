@@ -9,7 +9,6 @@ const OrderSchema: Schema = new Schema<IOrder>(
     mealId: { type: Schema.Types.ObjectId, ref: 'MealMenu', required: true },
     deliveryAddress: { type: String, required: true },
     phone: { type: Number, required: true },
-    mealItemIds: [{ type: String, required: true }],
     status: {
       type: String,
       enum: ["pending", "in progress", "delivered", "cancelled"],
