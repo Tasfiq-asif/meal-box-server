@@ -1,7 +1,6 @@
- import mongoose from 'mongoose';
-import { IOrder } from './order.interface';
-import { Order } from './order.model';
-
+import mongoose from "mongoose";
+import { IOrder } from "./order.interface";
+import { Order } from "./order.model";
 
 export class OrderService {
   // Create a new order
