@@ -72,6 +72,16 @@ src/
 - `GET /api/v1/users/:id` - Get user by ID (admin only)
 - `DELETE /api/v1/users/:id` - Delete user (admin only)
 
+### Meals
+
+- `GET /api/v1/meals` - Get all available meals
+- `GET /api/v1/meals/user/:userId` - Get meals for a specific provider
+- `POST /api/v1/meals` - Create a new meal
+- `POST /api/v1/meals/with-image` - Create a new meal with an image upload
+- `PUT /api/v1/meals/:mealId` - Update a meal
+- `PUT /api/v1/meals/:mealId/with-image` - Update a meal with an image upload
+- `DELETE /api/v1/meals/:mealId` - Delete a meal
+
 ## API Response Format
 
 ### Success Response
@@ -111,3 +121,30 @@ src/
 - `COOKIE_EXPIRES_IN` - Cookie expiry in days
 - `BCRYPT_SALT_ROUNDS` - Number of salt rounds for password hashing
 - `FRONTEND_URL` - Frontend application URL
+- `JWT_REFRESH_SECRET` - Secret key for refresh token signing
+- `JWT_REFRESH_EXPIRES_IN` - Refresh token expiry (e.g. '7d' for 7 days)
+- `IMGBB_API_KEY` - ImgBB API key
+
+## Image Upload
+
+The application uses ImgBB to store meal images. When creating or updating a meal with an image:
+
+1. Use the `/with-image` endpoints
+2. Send a multipart form request with:
+   - `image`: The image file
+   - `mealData`: A JSON string containing the meal details
+
+Example:
+
+```javascript
+const formData = new FormData();
+formData.append("image", imageFile);
+formData.append("mealData", JSON.stringify(mealData));
+
+axios.post("http://localhost:8000/api/v1/meals/with-image", formData, {
+  headers: {
+    "Content-Type": "multipart/form-data",
+    Authorization: `Bearer ${token}`,
+  },
+});
+```

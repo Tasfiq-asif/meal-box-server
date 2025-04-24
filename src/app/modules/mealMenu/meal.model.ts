@@ -11,6 +11,7 @@ export interface IMealMenu extends Document {
   }[];
   dietTags: string[];
   availability: boolean;
+  imageUrl?: string;
 }
 
 const mealMenuSchema = new Schema<IMealMenu>({
@@ -42,6 +43,7 @@ const mealMenuSchema = new Schema<IMealMenu>({
   },
   dietTags: { type: [String], required: true },
   availability: { type: Boolean, default: true },
+  imageUrl: { type: String },
 });
 
 export const MealMenu = mongoose.model<IMealMenu>("MealMenu", mealMenuSchema);

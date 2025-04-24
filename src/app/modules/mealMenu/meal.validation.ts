@@ -50,6 +50,7 @@ const createMealValidationSchema = z.object({
       })
     ),
     availability: z.boolean().default(true),
+    imageUrl: z.string().url("Image URL must be a valid URL").optional(),
   }),
 });
 
@@ -77,6 +78,7 @@ const updateMealValidationSchema = z.object({
         .optional(),
       dietTags: z.array(z.string()).optional(),
       availability: z.boolean().optional(),
+      imageUrl: z.string().url("Image URL must be a valid URL").optional(),
     })
     .refine((body) => Object.keys(body).length > 0, {
       message: "At least one field is required for update",
