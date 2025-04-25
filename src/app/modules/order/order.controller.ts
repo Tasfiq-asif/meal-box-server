@@ -22,6 +22,26 @@ export class OrderController {
     }
   }
 
+  static async updateOrder(req: Request, res: Response) {
+    const { orderId } = req.params;
+    const updateData = req.body;
+
+    try {
+      const updatedOrder = await OrderService.updateOrder(orderId, updateData);
+      return res.status(200).json({
+        message: "Order updated successfully",
+        success: true,
+        data: updatedOrder,
+      });
+    } catch (error: any) {
+      return res.status(400).json({
+        message: "Something went wrong",
+        success: false,
+        error: error.message,
+      });
+    }
+  }
+
   static async getCustomerOrders(req: Request, res: Response) {
     const { customerId } = req.params;
 

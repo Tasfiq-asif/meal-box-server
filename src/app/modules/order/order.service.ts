@@ -12,6 +12,21 @@ export class OrderService {
     return await order.save();
   }
 
+  // Update an order by ID
+  static async updateOrder(orderId: string, updateData: Partial<IOrder>): Promise<IOrder | null> {
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+      throw new Error('Invalid Order ID');
+    }
+    const updatedOrder = await Order.findByIdAndUpdate(orderId, updateData, {
+      new: true, // Return the updated document
+      runValidators: true, // Ensure validation rules are applied
+    });
+    if (!updatedOrder) {
+      throw new Error('Order not found');
+    }
+    return updatedOrder;
+  }
+
   // Get all orders placed by a specific customer
   static async getCustomersOrders(customerId: string): Promise<IOrder[]> {
     if (!mongoose.Types.ObjectId.isValid(customerId)) {
