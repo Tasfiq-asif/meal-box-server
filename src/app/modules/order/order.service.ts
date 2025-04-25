@@ -30,12 +30,31 @@ export class OrderService {
     return updatedOrder;
   }
 
+  // Get a single order by ID
+  static async getOrderById(orderId: string): Promise<IOrder | null> {
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+      throw new Error("Invalid Order ID");
+    }
+    const order = await Order.findById(orderId)
+      .populate("customerId", "name email")
+      .populate("mealId", "mealName description imageUrl");
+
+    if (!order) {
+      throw new Error("Order not found");
+    }
+
+    return order;
+  }
+
   // Get all orders placed by a specific customer
   static async getCustomersOrders(customerId: string): Promise<IOrder[]> {
     if (!mongoose.Types.ObjectId.isValid(customerId)) {
       throw new Error("Invalid Customer ID");
     }
-    return await Order.find({ customerId: customerId }).sort({ createdAt: -1 });
+    return await Order.find({ customerId: customerId })
+      .populate("customerId", "name email")
+      .populate("mealId", "mealName description imageUrl")
+      .sort({ createdAt: -1 });
   }
 
   // Get all orders handled by a specific provider
@@ -43,6 +62,9 @@ export class OrderService {
     if (!mongoose.Types.ObjectId.isValid(providerId)) {
       throw new Error("Invalid Provider ID");
     }
-    return await Order.find({ providerId: providerId }).sort({ createdAt: -1 });
+    return await Order.find({ providerId: providerId })
+      .populate("customerId", "name email")
+      .populate("mealId", "mealName description imageUrl")
+      .sort({ createdAt: -1 });
   }
 }

@@ -11,7 +11,12 @@ import { MealRouter } from "./app/modules/mealMenu/meal.route";
 const app: Application = express();
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "https://mealbox-client-nine.vercel.app"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
