@@ -9,6 +9,9 @@ router.post("/customers/order", auth("customer"), OrderController.createOrder);
 
 router.patch("/orders/:orderId", OrderController.updateOrder);
 
+// Route to get a specific order by ID
+router.get("/orders/:orderId", OrderController.getOrderById);
+
 // Route to get orders for a specific customer - only accessible by customers or the specific customer
 router.get(
   "/customers/orders/:customerId",

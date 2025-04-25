@@ -79,4 +79,23 @@ export class OrderController {
       });
     }
   }
+
+  static async getOrderById(req: Request, res: Response) {
+    const { orderId } = req.params;
+
+    try {
+      const order = await OrderService.getOrderById(orderId);
+      return res.status(200).json({
+        message: "Order retrieved successfully",
+        success: true,
+        data: order,
+      });
+    } catch (error: any) {
+      return res.status(400).json({
+        message: "Something went wrong",
+        success: false,
+        error: error.message,
+      });
+    }
+  }
 }
