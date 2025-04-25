@@ -27,10 +27,15 @@ const getMealById = async (mealId: string): Promise<IMealMenu | null> => {
   return await MealMenu.findById(mealId);
 };
 
+const getAllMeals = async (): Promise<IMealMenu[]> => {
+  return await MealMenu.find({ availability: true });
+};
+
 export const MealMenuService = {
   createMeal,
   updateMeal,
   deleteMeal,
   getProviderMeals,
   getMealById,
+  getAllMeals,
 };
