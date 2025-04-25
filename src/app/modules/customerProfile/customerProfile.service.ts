@@ -22,11 +22,12 @@ const updateProfile = async (
   return result ? (result.toObject() as TCustomerProfile) : null;
 };
 
+
 const getprofile = async (
-  customerId: string
+  userId: string
 ): Promise<TCustomerProfile | null> => {
   const result = await CustomerProfile.findOne({
-    customerId: customerId,
+    userId: userId,
   }).populate({
     path: "userId",
     select: "name email phone address role", // Include all relevant user fields
